@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+import math
 def mapFunc(x, y, size):
     if x == 0 or x == size[0] - 1:
         if y == 0 or y == size[1] - 1:
@@ -20,6 +21,12 @@ def updateMap(x, y, value, m, data):
     if data[x][y] < value:
         m[x][y] -= 1
 
+def calcBasin(x, y, data):
+    if x < 0 or x == len(data[0]) or y < 0 or y == len(data) or data[x][y] >= 9:
+        return 0
+
+    data[x][y] = 10
+    return 1 + calcBasin(x - 1, y, data) + calcBasin(x + 1, y, data) + calcBasin(x, y - 1, data) + calcBasin(x, y + 1, data)
 
 with open("9.input") as file:
     data = [[int(x) for x in list(row)] for row in file.read().splitlines()]
@@ -38,10 +45,21 @@ with open("9.input") as file:
             updateMap(x, y + 1, v, match, data)
 
     risk = 0
+    lows = []
 
     for y in range(sizeY):
         for x in range(sizeX):
             if match[x][y] == 0:
                 risk += 1 + data[x][y]
+                lows.append((x, y))
 
     print(risk)
+
+    basins = []
+
+    for low in lows:
+        basins.append(calcBasin(low[0], low[1], data))
+
+    basins.sort()
+
+    print(math.prod(basins[-3:]))
