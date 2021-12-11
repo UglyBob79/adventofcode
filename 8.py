@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import re
-
 def parseLine(line):
     (signals, output) = line.split('|')
     signals = [''.join(sorted(s)) for s in signals.split()]
