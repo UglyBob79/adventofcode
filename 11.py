@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-import copy
-
 dir = [
     (-1, -1),
     (-1,  0),
@@ -48,17 +46,13 @@ with open("11.input") as file:
     data = [[int(x) for x in list(row)] for row in file.read().splitlines()]
 
     flashes = 0
-    board = copy.deepcopy(data)
-    for step in range(100):
-        flashes += update(board)
-
-    print(flashes)
-
-    flashes = 0
+    totalFlashes = 0
     step = 0
-    board = copy.deepcopy(data)
-    while flashes != len(board) * len(board[0]):
-        flashes = update(board)
+    while flashes != len(data) * len(data[0]):
+        flashes = update(data)
+        totalFlashes += flashes
         step += 1
+        if step == 100:
+            print(totalFlashes)
 
     print(step)
