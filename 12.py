@@ -22,7 +22,7 @@ def travel(graph, to):
         if graph['doubleVisit'] and graph['doubleNode'] is None and to not in ['start', 'end']:
             graph['doubleNode'] = to
         else:
-            return None
+            return
 
     graph['nodes'][to]['visited'] = True
 
