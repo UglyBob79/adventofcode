@@ -18,6 +18,10 @@ def parseGraph(lines):
 def travel(graph, to):
     global pathCount
 
+    if to == 'end':
+        pathCount += 1
+        return
+
     if graph['nodes'][to]['small'] and graph['nodes'][to]['visited']:
         if graph['doubleVisit'] and not graph['doubleNode'] and to != 'start':
             graph['doubleNode'] = to
@@ -25,10 +29,6 @@ def travel(graph, to):
             return
 
     graph['nodes'][to]['visited'] = True
-
-    if to == 'end':
-        pathCount += 1
-        return
 
     for path in graph['nodes'][to]['paths']:
         travel(deepcopy(graph), path)
