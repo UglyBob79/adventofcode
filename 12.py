@@ -19,7 +19,7 @@ def travel(graph, to):
     global pathCount
 
     if graph['nodes'][to]['small'] and graph['nodes'][to]['visited']:
-        if graph['doubleVisit'] and graph['doubleNode'] is None and to not in ['start', 'end']:
+        if graph['doubleVisit'] and not graph['doubleNode'] and to != 'start':
             graph['doubleNode'] = to
         else:
             return
@@ -37,11 +37,7 @@ def countPaths(graph):
     global pathCount
     pathCount = 0
 
-    start = graph['nodes']['start']
-    start['visited'] = True
-
-    for path in start['paths']:
-        travel(deepcopy(graph), path)
+    travel(deepcopy(graph), 'start')
 
     return pathCount
 
