@@ -2,15 +2,10 @@
 import sys
 
 def checkWin(board):
-    for row in board:
-        if not any(row):
-            return True
-
-    flip = list(map(list, zip(*board)))
-
-    for row in flip:
-        if not any(row):
-            return True
+    for board in [board, list(map(list, zip(*board)))]:
+        for row in board:
+            if not any(row):
+                return True
 
 def winTurn(board, numbers):
     for i in range(len(numbers)):
