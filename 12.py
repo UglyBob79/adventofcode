@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from copy import deepcopy
-
 def parseGraph(lines):
     graph = { 'doubleVisit' : False, 'nodes' : {} }
 
