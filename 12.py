@@ -2,43 +2,46 @@
 from copy import deepcopy
 
 def parseGraph(lines):
-    graph = { 'doubleVisit' : False, 'doubleNode' : None, 'nodes' : {} }
+    graph = { 'doubleVisit' : False, 'nodes' : {} }
 
     for line in lines:
         nodes = line.split('-')
 
         for node in nodes:
             if node not in graph['nodes']:
-                graph['nodes'][node] = { 'name' : node, 'small' : node.islower(), 'paths' : [x for x in nodes if x != node], 'visited' : False }
+                graph['nodes'][node] = { 'name' : node, 'small' : node.islower(), 'paths' : [x for x in nodes if x != node] }
             else:
                 graph['nodes'][node]['paths'].append([x for x in nodes if x != node][0])
 
     return graph
 
-def travel(graph, to):
+def travel(graph, to, visited):
     global pathCount
 
     if to == 'end':
         pathCount += 1
         return
 
-    if graph['nodes'][to]['small'] and graph['nodes'][to]['visited']:
-        if graph['doubleVisit'] and not graph['doubleNode'] and to != 'start':
-            graph['doubleNode'] = to
+    if graph['nodes'][to]['small'] and visited[to] > 0:
+        if graph['doubleVisit'] and not visited['double'] and to != 'start':
+            visited['double'] = to
         else:
             return
 
-    graph['nodes'][to]['visited'] = True
+    visited[to] += 1
 
     for path in graph['nodes'][to]['paths']:
         if path != 'start':
-            travel(deepcopy(graph), path)
+            travel(graph, path, deepcopy(visited))
 
 def countPaths(graph):
     global pathCount
     pathCount = 0
 
-    travel(deepcopy(graph), 'start')
+    visited = { node : 0 for node in graph['nodes'] }
+    visited['double'] = None
+
+    travel(graph, 'start', deepcopy(visited))
 
     return pathCount
 
