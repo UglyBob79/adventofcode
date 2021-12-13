@@ -23,9 +23,6 @@ def winTurn(board, numbers):
 
     return sys.maxsize
 
-def winScore(board, winTurn):
-
-
 def readFile(filename):
     with open(filename) as file:
         numbers = [int(x) for x in file.readline().strip().split(',')]
