@@ -32,7 +32,7 @@ def travel(graph, to, visited):
 
     for path in graph['nodes'][to]['paths']:
         if path != 'start':
-            travel(graph, path, deepcopy(visited))
+            travel(graph, path, visited.copy())
 
 def countPaths(graph):
     global pathCount
@@ -41,7 +41,7 @@ def countPaths(graph):
     visited = { node : 0 for node in graph['nodes'] }
     visited['double'] = None
 
-    travel(graph, 'start', deepcopy(visited))
+    travel(graph, 'start', visited.copy())
 
     return pathCount
 
