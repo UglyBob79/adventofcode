@@ -31,7 +31,8 @@ def travel(graph, to):
     graph['nodes'][to]['visited'] = True
 
     for path in graph['nodes'][to]['paths']:
-        travel(deepcopy(graph), path)
+        if path != 'start':
+            travel(deepcopy(graph), path)
 
 def countPaths(graph):
     global pathCount
