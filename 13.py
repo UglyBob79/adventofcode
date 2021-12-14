@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from pprint import pprint
-
 with open("13.input") as file:
     points = []
     folds = []
