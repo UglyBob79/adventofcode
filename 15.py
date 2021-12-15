@@ -16,16 +16,12 @@ def shortest(grid):
         for i in range(len(delta[0])):
             (x , y) = (c[0] + delta[0][i], c[1] + delta[1][i])
 
-            if x < 0 or x == len(grid) or y < 0 or y == len(grid[0]):
+            if x not in range(len(grid)) or y not in range(len(grid[0])):
                 continue
 
             if distance[x][y] > distance[c[0]][c[1]] + grid[x][y]:
                 if distance[x][y] != sys.maxsize:
-                    try:
-                        st.remove((x, y, distance[x][y]))
-                    except KeyError:
-                        pass
-
+                        st.discard((x, y, distance[x][y]))
                 distance[x][y] = distance[c[0]][c[1]] + grid[x][y]
                 st.add((x, y, distance[x][y]))
 
