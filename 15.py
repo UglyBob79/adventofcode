@@ -3,21 +3,19 @@ import sys
 
 def shortest(grid):
     distance = [[sys.maxsize for x in list(row)] for row in grid]
-
-    dx = [-1, 0, 1, 0]
-    dy = [0, -1, 0, 1]
+    delta = [[-1, 0, 1, 0], [0, -1, 0, 1]]
 
     st = set()
 
     st.add((0, 0, 0))
-    distance[0][0] = grid[0][0]
+    distance[0][0] = 0
 
     while len(st) > 0:
         c = st.pop()
 
-        for i in range(4):
-            x = c[0] + dx[i]
-            y = c[1] + dy[i]
+        for i in range(len(delta[0])):
+            (x , y) = (c[0] + delta[0][i], c[1] + delta[1][i])
+
             if x < 0 or x == len(grid) or y < 0 or y == len(grid[0]):
                 continue
 
@@ -35,6 +33,16 @@ def shortest(grid):
 
 with open("15.input") as file:
     cavern = [[int(x) for x in list(row)] for row in file.read().splitlines()]
-    cavern[0][0] = 0
 
     print(shortest(cavern))
+
+    expand = list()
+
+    for i in range(5):
+        for x in range(len(cavern)):
+            expand.append([])
+            for j in range(5):
+                for y in range(len(cavern[0])):
+                    expand[i * len(cavern) + x].append((cavern[x][y] + i + j - 1) % 9 + 1)
+
+    print(shortest(expand))
