@@ -43,48 +43,27 @@ def decodePacket(s):
         p = decodeLiteral(header, s)
     else:
         p = decodeOperator(header, s)
-        
+
     return p
-
-def evalSum(packet):
-    return sum([evalPacket(p) for p in packet['sub']])
-
-def evalProduct(packet):
-    return reduce(mul, [evalPacket(p) for p in packet['sub']])
-
-def evalMin(packet):
-    return reduce(min, [evalPacket(p) for p in packet['sub']])
-
-def evalMax(packet):
-    return reduce(max, [evalPacket(p) for p in packet['sub']])
-
-def evalGreater(packet):
-    return 1 if evalPacket(packet['sub'][0]) > evalPacket(packet['sub'][1]) else 0
-
-def evalLess(packet):
-    return 1 if evalPacket(packet['sub'][0]) < evalPacket(packet['sub'][1]) else 0
-
-def evalEqual(packet):
-    return 1 if evalPacket(packet['sub'][0]) == evalPacket(packet['sub'][1]) else 0
 
 def evalPacket(packet):
     type = packet['header']['type']
     if type == 0:
-        return evalSum(packet)
+        return sum([evalPacket(p) for p in packet['sub']])
     elif type == 1:
-        return evalProduct(packet)
+        return reduce(mul, [evalPacket(p) for p in packet['sub']])
     elif type == 2:
-        return evalMin(packet)
+        return reduce(min, [evalPacket(p) for p in packet['sub']])
     elif type == 3:
-        return evalMax(packet)
+        return reduce(max, [evalPacket(p) for p in packet['sub']])
     elif type == 4:
         return packet['value']
     elif type == 5:
-        return evalGreater(packet)
+        return 1 if evalPacket(packet['sub'][0]) > evalPacket(packet['sub'][1]) else 0
     elif type == 6:
-        return evalLess(packet)
+        return 1 if evalPacket(packet['sub'][0]) < evalPacket(packet['sub'][1]) else 0
     elif type == 7:
-        return evalEqual(packet)
+        return 1 if evalPacket(packet['sub'][0]) == evalPacket(packet['sub'][1]) else 0
 
 with open("16.input") as file:
     packet = decodePacket(BitStream(binascii.unhexlify(file.read().strip())))
