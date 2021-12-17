@@ -27,10 +27,10 @@ with open("17.input") as file:
 
     print(y)
 
-    hits = []
+    hits = 0
     for ys in range(speedRange[1][0], speedRange[1][1] + 1):
         for xs in range(speedRange[0][0], speedRange[0][1] + 1):
             if hit(xs, ys, tRange):
-                hits.append(())
+                hits += 1
 
-    print(len(hits))
+    print(hits)
