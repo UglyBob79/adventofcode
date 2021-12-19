@@ -110,10 +110,7 @@ class Expression:
 
     def magnitude(self):
         d = self.data
-        d = d.replace('[', '(3*')
-        d = d.replace(',', '+2*')
-        d = d.replace(']', ')')
-        return eval(d)
+        return eval(d.translate(d.maketrans({'[': '(3*', ',': '+2*', ']': ')'})))
 
 with open("18.input") as file:
     data = [row.strip() for row in file.readlines()]
