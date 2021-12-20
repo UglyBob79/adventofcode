@@ -1,12 +1,4 @@
 #!/usr/bin/env python3
-import sys
-
-# y|      /z 3
-# 2|    /
-#  |  /
-#  |/_______
-#          x 1
-#
 
 rot = [
     # top up
