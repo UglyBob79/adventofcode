@@ -12,13 +12,13 @@ if __name__ == '__main__':
             for y in range(len(ocean)):
                 for x in range(len(ocean[0])):
                     if chr(ocean[y][x]) == '>':
-                        if chr(ocean[y][(x + 1) % len(row)]) == '.':
+                        if chr(ocean[y][(x + 1) % len(ocean[0])]) == '.':
                             next[y][x] = ord('.')
-                            next[y][(x + 1) % len(row)] = ord('>')
+                            next[y][(x + 1) % len(ocean[0])] = ord('>')
                             moved = True
 
-            ocean = next
-            next = copy.deepcopy(ocean)
+            ocean = copy.deepcopy(next)
+            
             for x in range(len(ocean[0])):
                 for y in range(len(ocean)):
                     if chr(ocean[y][x]) == 'v':
