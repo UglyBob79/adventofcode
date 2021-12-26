@@ -82,14 +82,6 @@ def findOptMove(board, moves):
         if move[0][1] == 0: # corridor
             return move
 
-def sortByCost(board, moves):
-    moves.sort(key=lambda move:getCost(board[move[0][0]][move[0][1]], move))
-    return moves
-
-def sortBurrowFirst(board, moves):
-    moves.sort(key=lambda move:4 - move[1][1])
-    return moves
-
 @lru_cache(maxsize=None)
 def traverse(board, move, totCost):
     global minCost
