@@ -1,20 +1,19 @@
 #!/usr/bin/env python3
-from functools import lru_cache
 import sys
+from functools import lru_cache
 
-# game board:
-# [ ]-[ ]-|-[ ]-|-[ ]-|-[ ]-|-[ ]-[ ]
-#        [ ]   [ ]   [ ]   [ ]
-#        [ ]   [ ]   [ ]   [ ]
-#  0   1    2     3    4    5     6    7    8     9    10   11    12   13  14
-# [ ]-[ ]-[b00]-[b01]-[ ]-[b10]-[b11]-[ ]-[b20]-[b21]-[ ]-[b30]-[b31]-[ ]-[ ]
+#
+#    0   1    2    3    4    5    6    7    8    9   10
+# 0 [ ]-[ ]-[   ]-[ ]-[   ]-[ ]-[   ]-[ ]-[   ]-[ ]-[ ]
+# 1         [   ]     [   ]     [   ]     [   ]
+# 2         [   ]     [   ]     [   ]     [   ]
+# 3         [   ]     [   ]     [   ]     [   ]
+# 4         [   ]     [   ]     [   ]     [   ]
 #
 
-corridor = [0, 1, 4, 7, 10, 13, 14]
-burrow = [None, None, 'A', 'A', None, 'B', 'B', None, 'C', 'C', None, 'D', 'D', None, None]
-burrows = {'A': [2, 3], 'B': [5, 6], 'C': [8, 9], 'D': [11, 12]}
-top = [2, 5, 8, 11]
-bottom = [3, 6, 9, 12]
+corridor = [0, 1, 3, 5, 7, 9, 10]
+burrows = {'A': 2, 'B': 4, 'C': 6, 'D': 8}
+burrow = [None, None, 'A', None, 'B', None, 'C', None, 'D', None, None]
 cost = {'A': 1, 'B': 10, 'C': 100, 'D': 1000}
 
 minCost = sys.maxsize
@@ -22,103 +21,132 @@ minCost = sys.maxsize
 @lru_cache(maxsize=None)
 def getMoves(board):
     moves = []
+    for i in range(len(board)):
+        # corridor to burrow
+        if i in corridor:
+            b = board[i][0]
+            if b != ' ':
+                d = burrows[b]
+                for j in range(4, 0, -1):
+                    if board[d][j]:
+                        if board[d][j] == ' ':
+                            # move to burrow
+                            path = [a for a in corridor if min(i, d) <= a <= max(i, d)]
+                            blocked = False
+                            for p in path:
+                                if p != i and board[p][0] != ' ': # no passage
+                                    blocked = True
+                                    break
+                            if not blocked:
+                                moves.append(((i, 0), (d, j)))
+                            break
+                        elif board[d][j] != burrow[d]:
+                            # no move possible
+                            break
+        # burrow to corridor
+        if burrow[i]:
+            top = None
+            move = False
+            for j in range(1, 5):
+                if board[i][j] and board[i][j] != ' ':
+                    if not top:
+                        top = j
+                    if board[i][j] != burrow[i]:
+                        move = True
+            if move:
+                for c in corridor:
+                    path = [d for d in corridor if min(i, c) <= d <= max(i, c)]
+                    blocked = False
+                    for p in path:
+                        if board[p][0] != ' ': # no passage
+                            blocked = True
+                            break
+                    if not blocked:
+                        blocked = True
+                        moves.append(((i, top), (c, 0)))
+    return tuple(moves)
 
-    for c in corridor: # from corridor to burrow
-        a = board[c]
-        if a != ' ':
-            b = burrows[a][1]
-            path = [d for d in corridor if min(b, c) <= d <= max(b, c) and d != c]
-            blocked = False
-            for p in path:
-                if board[p] != ' ': # no passage
-                    blocked = True
-                    break
-            if not blocked:
-                if board[burrows[a][1]] == ' ':
-                    moves.append((c, burrows[a][1]))
-                elif board[burrows[a][0]] == ' ' and board[burrows[a][1]] == a:
-                    moves.append((c, burrows[a][0]))
-    for a in top: # from top burrow to corridor
-        b = board[a]
-        if b != ' ' and (burrows[b][0] != a or burrows[board[a + 1]][1] != a + 1):
-            for c in corridor:
-                path = [d for d in corridor if min(a, c) <= d <= max(a, c)]
-                blocked = False
-                for p in path:
-                    if board[p] != ' ': # no passage
-                        blocked = True
-                        break
-                if not blocked:
-                    moves.append((a, c))
-    for a in bottom: # from bottom burrow to corridor
-        b = board[a]
-        if b != ' ' and board[a - 1] == ' ' and burrows[b][1] != a: # not blocked by top burrow
-            for c in corridor:
-                path = [d for d in corridor if min(a, c) <= d <= max(a, c)]
-                blocked = False
-                for p in path:
-                    if board[p] != ' ': # no passage
-                        blocked = True
-                        break
-                if not blocked:
-                    moves.append((a, c))
-    return moves
+def done(board):
+    for i in [2, 4, 6, 8]:
+        for j in range(1, 5):
+            if board[i][j] and board[i][j] != burrow[i]:
+                return False
+    return True
 
 @lru_cache(maxsize=None)
 def getCost(type, move):
-    s = move[0] if burrow[move[0]] else move[1]
-    e = move[1] if burrow[move[0]] else move[0]
-    step = 0
-    if s in bottom:
-        step += 1
-        s -= 1
-    if s in top:
-        path = [d for d in corridor if min(s, e) <= d <= max(s, e)]
-        for p in path:
-            step += 2 if p != 0 and p != 14 else 1
+    return cost[type] * (abs(move[0][0] - move[1][0]) + abs(move[0][1] - move[1][1]))
 
-    return step * cost[type]
+def findOptMove(board, moves):
+    for move in moves:
+        if move[0][1] == 0: # corridor
+            return move
+
+def sortByCost(board, moves):
+    moves.sort(key=lambda move:getCost(board[move[0][0]][move[0][1]], move))
+    return moves
+
+def sortBurrowFirst(board, moves):
+    moves.sort(key=lambda move:4 - move[1][1])
+    return moves
 
 @lru_cache(maxsize=None)
 def traverse(board, move, totCost):
     global minCost
 
-    c = getCost(board[move[0]], move)
-    totCost += c
+    totCost += getCost(board[move[0][0]][move[0][1]], move)
 
-    if totCost > minCost:
+    if totCost >= minCost:
         return
 
-    board = board[:move[1]] + board[move[0]] + board[move[1] + 1:]
-    board = board[:move[0]] + ' ' + board[move[0] + 1:]
+    board = tuple(tuple(a if (i, j) not in move
+        else (' ' if (i, j) == move[0]
+        else board[move[0][0]][move[0][1]])
+        for j, a in enumerate(b)) for i, b in enumerate(board))
 
-    if board == '  AA BB CC DD  ':
+    if done(board):
         minCost = min(minCost, totCost)
         return
 
     moves = getMoves(board)
+    if len(moves) == 0:
+        return
 
-    for move in moves:
-        traverse(board, move, totCost)
+    optMove = findOptMove(board, moves)
+    if optMove:
+        traverse(board, optMove, totCost)
+    else:
+        for move in moves:
+            traverse(board, move, totCost)
 
 def simulate(board):
-    moves = getMoves(board)
-
-    for move in moves:
+    global corridor
+    d = max([len([a for a in b if a]) for b in board])
+    corridor = [1, 3, 5, 7, 9] if d == 3 else [0, 1, 3, 5, 7, 9, 10]
+    for move in getMoves(board):
         traverse(board, move, 0)
 
 if __name__ == '__main__':
     with open("23.input") as file:
         data = [row.strip() for row in file.readlines()]
 
-        board = [' '] * 15
+        board = []
+        for i in range(11):
+            if 2 <= i <= 8 and i % 2 == 0:
+                board.append(tuple((' ', data[2].split('#')[3:][:4][(i -2) // 2], data[3].split('#')[1:][:4][(i - 2) // 2], None, None)))
+            else:
+                board.append(tuple(' '))
+        simulate(tuple(board))
+        print(minCost)
 
-        for i in range(4):
-            board[2 + 3 * i] = data[2].split('#')[3:][:4][i]
-            board[2 + 3 * i + 1] = data[3].split('#')[1:][:4][i]
-
-        board = ''.join(board)
-
-        simulate(board)
-
+        data.append('#D#C#B#A#')
+        data.append('#D#B#A#C#')
+        minCost = sys.maxsize
+        board = []
+        for i in range(11):
+            if 2 <= i <= 8 and i % 2 == 0:
+                board.append(tuple((' ', data[2].split('#')[3:][:4][(i -2) // 2], data[5].split('#')[1:][:4][(i -2) // 2], data[6].split('#')[1:][:4][(i -2) // 2], data[3].split('#')[1:][:4][(i - 2) // 2])))
+            else:
+                board.append(tuple(' '))
+        simulate(tuple(board))
         print(minCost)
