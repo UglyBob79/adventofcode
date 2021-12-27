@@ -20,17 +20,17 @@ class Test23Methods(unittest.TestCase):
       #########
     def test_start_moves(self):
         board = (
-            tuple(' '),
-            tuple(' '),
+            (' ',),
+            (' ',),
             (' ', 'D', 'B', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'A', 'C', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'C', 'B', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'D', 'A', None, None),
-            tuple(' '),
-            tuple(' ')
+            (' ',),
+            (' ',)
         )
         expected = []
         for i in [2, 4, 6, 8]:
@@ -46,17 +46,17 @@ class Test23Methods(unittest.TestCase):
       #########
     def test_2nd_move(self):
         board = (
-            tuple(' '),
-            tuple('D'),
+            (' ',),
+            ('D',),
             (' ', ' ', 'B', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'A', 'C', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'C', 'B', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'D', 'A', None, None),
-            tuple(' '),
-            tuple(' '),
+            (' ',),
+            (' ',)
         )
         expected = []
         for i in [2, 4, 6, 8]:
@@ -72,17 +72,17 @@ class Test23Methods(unittest.TestCase):
       #########
     def test_3rd_move(self):
         board = (
-            tuple(' '),
-            tuple('D'),
+            (' ',),
+            ('D',),
             (' ', ' ', 'B', None, None),
-            tuple('A'),
+            ('A',),
             (' ', ' ', 'C', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'C', 'B', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'D', 'A', None, None),
-            tuple(' '),
-            tuple(' ')
+            (' ',),
+            (' ',)
         )
         expected = []
         for i in [4, 6, 8]:
@@ -98,17 +98,17 @@ class Test23Methods(unittest.TestCase):
       #########
     def test_no_move(self):
         board = (
-            tuple(' '),
-            tuple('A'),
+            (' ',),
+            ('A',),
             (' ', ' ', 'D', None, None),
-            tuple('B'),
+            ('B',),
             (' ', ' ', 'C', None, None),
-            tuple('D'),
+            ('D',),
             (' ', ' ', 'B', None, None),
-            tuple('C'),
+            ('C',),
             (' ', ' ', ' ', None, None),
-            tuple('A'),
-            tuple(' ')
+            ('A',),
+            (' ',)
         )
         expected = []
         moves = code.getMoves(board)
@@ -121,17 +121,17 @@ class Test23Methods(unittest.TestCase):
       #########
     def test_bottom_move(self):
         board = (
-            tuple('B'),
-            tuple('A'),
+            ('B',),
+            ('A',),
             (' ', ' ', 'A', None, None),
-            tuple('B'),
+            ('B',),
             (' ', ' ', ' ', None, None),
-            tuple('C'),
+            ('C',),
             (' ', ' ', ' ', None, None),
-            tuple('D'),
+            ('D',),
             (' ', ' ', ' ', None, None),
-            tuple('C'),
-            tuple('D')
+            ('C',),
+            ('D',)
         )
         expected = []
         for i in [1, 3, 5, 7]:
@@ -146,17 +146,17 @@ class Test23Methods(unittest.TestCase):
       #########
     def test_end_game(self):
         board = (
-            tuple(' '),
-            tuple('A'),
+            (' ',),
+            ('A',),
             (' ', ' ', 'A', None, None),
-            tuple('B'),
+            ('B',),
             (' ', ' ', ' ', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'C', 'C', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'D', 'D', None, None),
-            tuple('B'),
-            tuple(' ')
+            ('B',),
+            (' ',)
         )
         expected = []
         expected.append(((1, 0), (2, 1)))
@@ -172,17 +172,17 @@ class Test23Methods(unittest.TestCase):
       #########
     def test_end_game2(self):
         board = (
-            tuple(' '),
-            tuple(' '),
+            (' ',),
+            (' ',),
             (' ', 'A', 'A', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'B', 'B', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'C', 'C', None, None),
-            tuple(' '),
+            (' ',),
             (' ', ' ', 'D', None, None),
-            tuple(' '),
-            tuple('D')
+            (' ',),
+            ('D',)
         )
         expected = []
         expected.append(((10, 0), (8, 1)))
@@ -196,17 +196,17 @@ class Test23Methods(unittest.TestCase):
       #########
     def test_done_moves(self):
         board = (
-            tuple(' '),
-            tuple(' '),
+            (' ',),
+            (' ',),
             (' ', 'A', 'A', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'B', 'B', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'C', 'C', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'D', 'D', None, None),
-            tuple(' '),
-            tuple(' ')
+            (' ',),
+            (' ',)
         )
         expected = []
         moves = code.getMoves(board)
@@ -238,54 +238,35 @@ class Test23Methods(unittest.TestCase):
 
     def test_done_2d(self):
         board = (
-            tuple(' '),
-            tuple(' '),
+            (' ',),
+            (' ',),
             (' ', 'A', 'A', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'B', 'B', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'C', 'C', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'D', 'D', None, None),
-            tuple(' '),
-            tuple(' ')
+            (' ',),
+            (' ',)
         )
         self.assertTrue(code.done(board))
 
     def test_not_done_2d(self):
         board = (
-            tuple(' '),
-            tuple(' '),
+            (' ',),
+            (' ',),
             (' ', ' ', 'A', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'B', 'B', None, None),
-            tuple('A'),
+            (' ',),
             (' ', 'C', 'C', None, None),
-            tuple(' '),
+            (' ',),
             (' ', 'D', 'D', None, None),
-            tuple(' '),
-            tuple(' ')
+            (' ',),
+            (' ',)
         )
         self.assertFalse(code.done(board))
-
-    def test_sort_moves1(self):
-        board = (
-            tuple(' '),
-            tuple(' '),
-            (' ', 'D', 'B', None, None),
-            tuple(' '),
-            (' ', 'A', 'C', None, None),
-            tuple(' '),
-            (' ', 'C', 'B', None, None),
-            tuple(' '),
-            (' ', 'D', 'A', None, None),
-            tuple(' '),
-            tuple(' ')
-        )
-        moves = [((2, 1), (9, 0)), ((2, 1), (0, 0)), ((4, 1), (10, 0)), ((2, 1), (1, 0)), ((4, 1), (1, 0)), ((2, 1), (10, 0)), ((4, 1), (0, 0)), ((4, 1), (9, 0))]
-        expected = [((4, 1), (1, 0)), ((4, 1), (0, 0)), ((4, 1), (9, 0)), ((4, 1), (10, 0)), ((2, 1), (1, 0)), ((2, 1), (0, 0)), ((2, 1), (9, 0)), ((2, 1), (10, 0))]
-        moves = code.sortByCost(board, moves)
-        self.assertTrue(expected == moves)
 
 if __name__ == '__main__':
     unittest.main()
