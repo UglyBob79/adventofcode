@@ -1,22 +1,12 @@
 #!/usr/bin/env python3
 
-import bisect
+import itertools
 
 with open("1.input") as file:
-    data = [x.strip() for x in file.readlines()]
+    data = [int(x.strip()) if x.strip() else None for x in file.readlines()]
 
-    max_val = []
-    curr = 0
+    elfs = [sum(list(y)) for x, y in itertools.groupby(data, lambda z: z == None) if not x]
+    elfs.sort()
 
-    for val in data:
-        if not val:
-            bisect.insort(max_val, curr)
-            curr = 0
-        else:
-            curr += int(val)
-
-    if curr > 0:
-        bisect.insort(max_val, curr)
-
-    print(max(max_val))
-    print(sum(max_val[-3:]))
+    print(elfs[-1])
+    print(sum(elfs[-3:]))
