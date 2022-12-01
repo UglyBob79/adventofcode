@@ -15,5 +15,8 @@ with open("1.input") as file:
         else:
             curr += int(val)
 
+    if curr > 0:
+        bisect.insort(max_val, curr)
+
     print(max(max_val))
     print(sum(max_val[-3:]))
