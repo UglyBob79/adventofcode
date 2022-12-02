@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
 # A: Rock, B Paper, C Scissors
-shape = {
+shape_score = {
     'A': 1,
     'B': 2,
     'C': 3
@@ -25,27 +25,21 @@ score_map = {
     ('C', 'C'): 3
 }
 
-need_map = {
-    ('A', 'X'): 'C',
-    ('A', 'Y'): 'A',
-    ('A', 'Z'): 'B',
-    ('B', 'X'): 'A',
-    ('B', 'Y'): 'B',
-    ('B', 'Z'): 'C',
-    ('C', 'X'): 'B',
-    ('C', 'Y'): 'C',
-    ('C', 'Z'): 'A',
+need = {
+    'X': 2,
+    'Y': 0,
+    'Z': 1
 }
 
 with open("2.input") as file:
     data = [tuple(map(str, i.strip().split(' '))) for i in file]
 
 games = [(x, shape_map[y]) for (x, y) in data]
-score = [shape[y] + score_map[(x, y)] for (x, y) in games]
+score = [shape_score[y] + score_map[(x, y)] for (x, y) in games]
 
 print(sum(score))
 
-games = [(x, need_map[(x, y)]) for (x, y) in data]
-score = [shape[y] + score_map[(x, y)] for (x, y) in games]
+games = [(x, chr(ord('A') + (ord(x) - ord('A') + need[y]) % 3)) for (x, y) in data]
+score = [shape_score[y] + score_map[(x, y)] for (x, y) in games]
 
 print(sum(score))
