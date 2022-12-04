@@ -3,8 +3,8 @@
 with open("3.input") as file:
     data = file.read().splitlines()
 
-    score = sum([sum(map(lambda a: ord(a) + (-96 if a.islower() else -38), b)) for b in [set.intersection(set(l[:int(len(l)/2)]), set(l[int(len(l)/2):])) for l in data]])
+    score = sum(map(lambda a: ord(a) + (-96 if a.islower() else -38), [set.intersection(set(l[:int(len(l)/2)]), set(l[int(len(l)/2):])).pop() for l in data]))
     print(score)
 
-    score = sum([sum(map(lambda a: ord(a) + (-96 if a.islower() else -38), b)) for b in [set.intersection(*[set(y) for y in x]) for x in zip(*(iter(data),) * 3)]])
+    score = sum(map(lambda a: ord(a) + (-96 if a.islower() else -38), [set.intersection(*[set(y) for y in x]).pop() for x in zip(*(iter(data),) * 3)]))
     print(score)
