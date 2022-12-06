@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-from more_itertools import sliced
 from os import system
 import copy
 import time
@@ -40,8 +39,7 @@ with open("5.input") as file:
                 parts = row.split(' ')
                 moves.append((int(parts[1]), int(parts[3]) - 1, int(parts[5]) - 1))
             elif not row.startswith(' 1   2   3   4   5   6   7   8   9'):
-                parts = list(sliced(row, 4))
-
+                parts = [row[i:i+4] for i in range(0, len(row), 4)]
                 for i, p in enumerate(parts):
                     if p[1] != ' ' and not p[1].isnumeric():
                         supply[i].insert(0, p[1])
