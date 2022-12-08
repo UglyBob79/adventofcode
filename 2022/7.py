@@ -95,8 +95,6 @@ def traverse(data):
 
     return fs
 
-
-
 with open("7.input") as file:
     data = file.read().splitlines()
 
