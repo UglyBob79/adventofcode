@@ -9,29 +9,21 @@ with open("8.input") as file:
 
     # left/right
     for y in range(len(world)):
-        h = -1
-        for x in reversed(range(len(world[0]))):
-            if world[y][x] > h:
-                map[y][x] = 1
-                h = world[y][x]
-        h = -1
-        for x in range(len(world[0])):
-            if world[y][x] > h:
-                map[y][x] = 1
-                h = world[y][x]
+        for r in [range(len(world[0])), reversed(range(len(world[0])))]:
+            h = -1
+            for x in r:
+                if world[y][x] > h:
+                    map[y][x] = 1
+                    h = world[y][x]
 
     # up/down
     for x in range(len(world[0])):
-        h = -1
-        for y in reversed(range(len(world))):
-            if world[y][x] > h:
-                map[y][x] = 1
-                h = world[y][x]
-        h = -1
-        for y in range(len(world)):
-            if world[y][x] > h:
-                map[y][x] = 1
-                h = world[y][x]
+        for r in [range(len(world)), reversed(range(len(world)))]:
+            h = -1
+            for y in r:
+                if world[y][x] > h:
+                    map[y][x] = 1
+                    h = world[y][x]
 
     print(sum([sum(row) for row in map]))
 
@@ -53,6 +45,5 @@ with open("8.input") as file:
                     p += dir
 
                 map[y][x] = map[y][x] * c if map[y][x] else c
-
 
     print(max([max(row) for row in map]))
