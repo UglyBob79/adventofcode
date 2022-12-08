@@ -32,9 +32,8 @@ with open("8.input") as file:
     for y in range(len(world)):
         for x in range(len(world[0])):
             for dir in [[1, 0], [0, 1], [-1, 0], [0, -1]]:
-                p = np.array([x, y])
+                p = np.array([x, y]) + dir
                 c = 0
-                p += dir
 
                 while p[0] in range(len(world[0])) and p[1] in range(len(world)):
                     c += 1
