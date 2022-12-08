@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import numpy as np
-import math
 
 with open("8.input") as file:
     world = [list(map(int, [a for a in line])) for line in file.read().splitlines()]
@@ -47,6 +46,6 @@ with open("8.input") as file:
 
                 score.append(c)
 
-            map[y][x] = math.prod(score)
+            map[y][x] = np.prod(score)
 
     print(max([max(row) for row in map]))
