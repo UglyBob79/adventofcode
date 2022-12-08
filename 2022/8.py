@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import numpy as np
+import math
 
 with open("8.input") as file:
     world = [list(map(int, [a for a in line])) for line in file.read().splitlines()]
@@ -31,6 +32,7 @@ with open("8.input") as file:
 
     for y in range(len(world)):
         for x in range(len(world[0])):
+            score = []
             for dir in [[1, 0], [0, 1], [-1, 0], [0, -1]]:
                 p = np.array([x, y]) + dir
                 c = 0
@@ -43,6 +45,8 @@ with open("8.input") as file:
 
                     p += dir
 
-                map[y][x] = map[y][x] * c if map[y][x] else c
+                score.append(c)
+
+            map[y][x] = math.prod(score)
 
     print(max([max(row) for row in map]))
