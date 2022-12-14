@@ -33,4 +33,3 @@ with open('13.input') as file:
     data = sorted(data + dividers, key=cmp_to_key(compare))
 
     print(math.prod([data.index(d) + 1 for d in dividers]))
-    print((data.index([[2]]) + 1) * (data.index([[6]]) + 1))
