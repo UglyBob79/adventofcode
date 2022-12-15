@@ -7,7 +7,6 @@ def ls(curr, data):
                 continue
 
         if d[0] == 'dir':
-            print("ls dir: " + d[1])
             dir = {'name': d[1], 'type': 'dir', 'children': [], 'parent': curr, 'size': 0}
             curr['children'].append(dir)
         else:
