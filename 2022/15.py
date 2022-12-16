@@ -12,6 +12,9 @@ def append_line(world, size, xr, y):
         xr = (max(xr[0], 0), min(xr[1], size[0]))
 
     if y in world:
+        if len(world[y]) == 1 and world[y][0] == (0, size[1]):
+            return
+
         overlaps = [r for r in world[y] if overlap(xr, r)]
 
         if len(overlaps) > 0:
