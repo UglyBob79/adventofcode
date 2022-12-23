@@ -101,9 +101,8 @@ def simulate(elves, steps, visualize=False):
         # do moves
         for move in moves:
             if len(moves[move]) == 1:
-                del elves[moves[move][0]]
-                elves[move] = 1
-
+                elves.remove(moves[move][0])
+                elves.add(move)
         if visualize:
             print_elves(elves)
             input()
@@ -113,12 +112,12 @@ def simulate(elves, steps, visualize=False):
 with open('23.input') as file:
     data = file.read().splitlines()
 
-    elves = {}
+    elves = set()
 
     for y in range(len(data)):
         for x in range(len(data[y])):
             if data[y][x] == '#':
-                elves[(x, y)] = 1
+                elves.add((x,y))
 
     elves2 = elves.copy()
 
