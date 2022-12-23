@@ -25,10 +25,14 @@ def offset(pos, offset):
 
 def count_neighbors(elves, elf):
     c = 0
-    for n in NEIGHBORS:
-        pos = offset(elf, n)
-        if pos in elves:
-            c += 1
+
+    for y in [-1, 0, 1]:
+        for x in [-1, 0, 1]:
+            if x == y == 0:
+                continue
+            pos = offset(elf, (x, y))
+            if pos in elves:
+                c += 1
     return c
 
 def dir_count(elves, elf, dir):
