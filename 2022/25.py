@@ -22,7 +22,7 @@ def dec2snafu(dec):
             if abs(dec - val * SNAFU_DIGITS[d]) < abs(diff):
                 diff = dec - val * SNAFU_DIGITS[d]
                 dig = d
-        if abs(diff) < max_val:
+        if abs(diff) <= max_val:
             break
 
         pos += 1
