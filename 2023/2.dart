@@ -44,9 +44,9 @@ void main() {
           .firstMatch(line)!
           .group(2)!
           .split(';')
-          .map((s) => Map.fromIterable(s.trim().split(', '),
-              key: (item) => item.split(' ')[1].toString(),
-              value: (item) => int.parse(item.split(' ')[0])))
+          .map((s) => Map.fromIterable(s.trim().split(', ').map((s) => s.split(' ')),
+              key: (item) => item[1].toString(),
+              value: (item) => int.parse(item[0])))
           .toList())
       .toList();
 
