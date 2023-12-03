@@ -2,88 +2,35 @@
 
 import 'dart:io';
 
-bool checkSymbol(List<List<int>> data, int x, int y) {
-  if (x < 0 || y < 0 || x >= data[0].length || y >= data.length) {
-    return false;
-  } else {
-    return data[y][x] != 46 && (data[y][x] < 48 || data[y][x] > 57);
-  }
-}
+Map<String, int> parts = {};
+Map<String, List<int>> gears = {};
 
-List<int>? checkStar(List<List<int>> data, int x, int y) {
-  if (x < 0 || y < 0 || x >= data[0].length || y >= data.length) {
-    return null;
-  } else {
-    return data[y][x] == 42 ? [x, y] : null;
-  }
-}
+void scanScematic(List<String> data) {
+  data.asMap().forEach((y, row) {
+    Iterable<RegExpMatch> matches = RegExp(r'\d+').allMatches(row);
 
-void scanScematic(List<List<int>> data) {
-  int sum = 0;
-  Map<String, List<int>> stars = {};
-
-  for (int y = 0; y < data.length; y++) {
-    int num = 0;
-    bool symbol = false;
-    String? star = null;
-
-    for (int x = 0; x < data[y].length; x++) {
-      int c = data[y][x];
-
-      if (c >= 48 && c <= 57) {
-        if (num > 0) num *= 10;
-
-        num += c - 48;
-
-        if (!symbol) {
-          symbol = List.generate(3, (dx) => x - 1 + dx).any((newX) =>
-              List.generate(3, (dy) => y - 1 + dy)
-                  .any((newY) => checkSymbol(data, newX, newY)));
-        }
-
-        for (int newX = x - 1; newX <= x + 1 && star == null; newX++) {
-          for (int newY = y - 1; newY <= y + 1 && star == null; newY++) {
-            star = checkStar(data, newX, newY)?.toString();
+    for (RegExpMatch match in matches) {
+      for (int sy = y - 1; sy <= y + 1; sy++) {
+        for (int sx = match.start - 1; sx <= match.end; sx ++) {
+          if (sx > 0 && sy > 0 && sx < row.length && sy < data.length) {
+            if (data[sy].codeUnitAt(sx) != 46 && (data[sy].codeUnitAt(sx) < 48 || data[sy].codeUnitAt(sx) > 57)) {
+              parts[[match.start, y].toString()] = int.parse(match.group(0)!);
+              if (data[sy][sx] == '*')
+                gears.putIfAbsent([sx, sy].toString(), () => []).add(int.parse(match.group(0)!));
+            }
           }
-        }
-      } else {
-        if (num > 0) {
-          if (symbol) sum += num;
-
-          symbol = false;
-
-          if (star != null) stars.putIfAbsent(star, () => []).add(num);
-
-          num = 0;
-          star = null;
         }
       }
     }
+  });
 
-    if (num > 0) {
-      if (symbol) sum += num;
-
-      if (star != null) stars.putIfAbsent(star, () => []).add(num);
-    }
-  }
-
-  int gears = 0;
-
-  for (List<int> star in stars.values) {
-    if (star.length == 2) {
-      gears += star[0] * star[1];
-    }
-  }
-
-  print(sum);
-  print(gears);
+  print(parts.values.reduce((value, element) => value + element));
+  print(gears.values.where((element) => element.length > 1).map((gear) => gear.reduce((a, b) => a * b)).reduce((a, b) => a +b));
 }
 
 void main() {
-  List<List<int>> data = new File("3.input")
+  List<String> data = new File("3.input")
       .readAsLinesSync()
-      .map((line) => line.codeUnits)
       .toList();
-
   scanScematic(data);
 }
