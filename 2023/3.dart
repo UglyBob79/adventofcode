@@ -2,14 +2,12 @@
 
 import 'dart:io';
 
-Map<String, int> parts = {};
-Map<String, List<int>> gears = {};
-
 void scanScematic(List<String> data) {
-  data.asMap().forEach((y, row) {
-    Iterable<RegExpMatch> matches = RegExp(r'\d+').allMatches(row);
+  Map<String, int> parts = {};
+  Map<String, List<int>> gears = {};
 
-    for (RegExpMatch match in matches) {
+  data.asMap().forEach((y, row) {
+    for (RegExpMatch match in RegExp(r'\d+').allMatches(row)) {
       for (int sy = y - 1; sy <= y + 1; sy++) {
         for (int sx = match.start - 1; sx <= match.end; sx ++) {
           if (sx > 0 && sy > 0 && sx < row.length && sy < data.length) {
