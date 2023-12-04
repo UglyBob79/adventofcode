@@ -9,7 +9,7 @@ void scanScematic(List<String> data) {
   data.asMap().forEach((y, row) {
     for (RegExpMatch match in RegExp(r'\d+').allMatches(row)) {
       for (int sy = y - 1; sy <= y + 1; sy++) {
-        for (int sx = match.start - 1; sx <= match.end; sx ++) {
+        for (int sx = match.start - 1; sx <= match.end; sx++) {
           if (sx < 0 || sy < 0 || sx >= row.length || sy >= data.length) continue;
 
           if (data[sy].codeUnitAt(sx) != 46 && (data[sy].codeUnitAt(sx) < 48 || data[sy].codeUnitAt(sx) > 57)) {
@@ -24,7 +24,7 @@ void scanScematic(List<String> data) {
   });
 
   print(parts.values.reduce((value, element) => value + element));
-  print(gears.values.where((element) => element.length > 1).map((gear) => gear.reduce((a, b) => a * b)).reduce((a, b) => a +b));
+  print(gears.values.where((element) => element.length > 1).map((gear) => gear.reduce((a, b) => a * b)).reduce((a, b) => a + b));
 }
 
 void main() {
