@@ -104,7 +104,8 @@ void main() {
   int lowest = seeds.map((seed) => start!.mapVal(seed)).reduce((value, element) => value < element ? value : element);
   print(lowest);
 
-  List<List<int>> ranges = List.generate((seeds.length / 2).ceil(), (index) => seeds.sublist(index * 2, (index + 1) * 2),).toList();
-  lowest = ranges.map((range) => start!.mapRange([range[0], range[0] + range[1] - 1])).reduce((value, element) => value < element ? value : element);
+  List<List<int>> ranges = List.generate((seeds.length / 2).ceil(), (index) => [seeds[index * 2], seeds[index * 2] + seeds[index * 2 + 1] - 1]).toList();
+
+  lowest = ranges.map((range) => start!.mapRange(range)).reduce((value, element) => value < element ? value : element);
   print(lowest);
 }
