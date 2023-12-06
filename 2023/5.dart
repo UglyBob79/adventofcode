@@ -5,7 +5,7 @@ import 'dart:io';
 class PlantMap {
   final String name;
   PlantMap? next;
-  List<List<int>?> convs = [];
+  List<List<int>> convs = [];
 
   PlantMap(this.name);
 
@@ -13,29 +13,23 @@ class PlantMap {
     convs.add([sourceStart, sourceStart + len - 1, destStart - sourceStart]);
   }
 
-  int mapVal(int val) {
-    var conv = convs.firstWhere((conv) => (val >= conv![0] && val <= conv[1]), orElse: () => null);
-
-    if (conv != null)
-      val = val + conv[2];
-
-    return next != null ? next!.mapVal(val) : val;
+  List<int> mapVals(List<int> vals) {
+    return vals.map((v) => v + convs.firstWhere((conv) => (v >= conv[0] && v <= conv[1]), orElse: () => [0, 0, 0])[2]).toList();
   }
 
-  bool overlap(List<int> range1, List<int> range2) {
+  bool isOverlap(List<int> range1, List<int> range2) {
     return (range1[0] <= range2[1] && range1[1] >= range2[0]) || range2[0] <= range1[1] && range2[1] >= range1[0];
   }
 
-  int mapRange(List<int> range) {
-    List<List<int>> ranges = [range];
-    List<int> minVals = [];
+  List<List<int>> mapRanges(List<List<int>> ranges) {
+    List<List<int>> out = [];
 
-    while (ranges.length > 0) {
+    while (ranges.isNotEmpty) {
       List<int> curr = ranges.removeAt(0);
       bool match = false;
 
       for (var conv in convs) {
-        if (overlap(curr, conv!)) {
+        if (isOverlap(curr, conv)) {
           match = true;
 
           if (curr[0] < conv[0]) {
@@ -48,25 +42,25 @@ class PlantMap {
             break;
           } else {
             List<int> newRange = curr.map((e) => e + conv[2]).toList();
-            minVals.add( next != null ? next!.mapRange(newRange) : newRange[0]);
+            out.add(newRange);
             break;
           }
         }
       }
 
       if (!match) {
-        minVals.add((next != null) ? next!.mapRange(curr) : curr[0]);
+        out.add(curr);
       }
     }
 
-   return minVals.reduce((value, element) => value < element ? value : element);
+    return out;
   }
 
   @override
   String toString() {
     StringBuffer buffer = new StringBuffer();
-    buffer.writeln("PlantMap ${name} {");
-      convs.forEach((c) => buffer.writeln("  (${c![0]}-${c[1]}: ${c[2]})"));
+    buffer.writeln("\nPlantMap ${name} {");
+      convs.forEach((c) => buffer.writeln("  (${c[0]}-${c[1]}: ${c[2]})"));
     buffer.writeln("}");
     return buffer.toString();
   }
@@ -79,33 +73,24 @@ void main() {
 
   List<int> seeds = RegExp(r'(\d+)').allMatches(data[0]).map((match) => int.parse(match.group(0)!)).toList();
 
-  PlantMap? start = null;
-  PlantMap? curr = null;
+  List<PlantMap> maps = [];
 
   for (int i = 2; i < data.length; i++) {
     RegExpMatch? match = RegExp(r'(\d+) (\d+) (\d+)').firstMatch(data[i]);
 
     if (match != null) {
       List<int> conv = match.groups([1, 2, 3]).map((g) => int.parse(g!)).toList();
-      curr!.addConv(conv[0], conv[1], conv[2]);
+      maps.last.addConv(conv[0], conv[1], conv[2]);
     } else if (!data[i].isEmpty) {
-      PlantMap plantMap = PlantMap(data[i].split(' ')[0]);
-
-      if (start == null)
-        start = plantMap;
-
-      if (curr != null)
-        curr.next = plantMap;
-
-      curr = plantMap;
+      maps.add(PlantMap(data[i].split(' ')[0]));
     }
   }
 
-  int lowest = seeds.map((seed) => start!.mapVal(seed)).reduce((value, element) => value < element ? value : element);
-  print(lowest);
+  var locations = maps.fold(seeds, (curr, plantMap) => plantMap.mapVals(curr)).toList();
+  print(locations.reduce((value, element) => value < element ? value : element));
 
   List<List<int>> ranges = List.generate((seeds.length / 2).ceil(), (index) => [seeds[index * 2], seeds[index * 2] + seeds[index * 2 + 1] - 1]).toList();
 
-  lowest = ranges.map((range) => start!.mapRange(range)).reduce((value, element) => value < element ? value : element);
-  print(lowest);
+  var out = maps.fold(ranges, (curr, plantMap) => plantMap.mapRanges(curr)).toList();
+  print(out.map((e) => e[0]).reduce((value, element) => value < element ? value : element));
 }
