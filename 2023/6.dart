@@ -17,15 +17,8 @@ void main() {
 
   var time = RegExp(r'\d+').allMatches(data[0]).map((match) => int.parse(match.group(0)!)).toList();
   var dist = RegExp(r'\d+').allMatches(data[1]).map((match) => int.parse(match.group(0)!)).toList();
-
   var races = List.generate(time.length, (index) => [time[index], dist[index]]);
 
-  var result = races.map((race) => calcWins(race[0], race[1]));
-
-  print(result.reduce((value, element) => value * element));
-
-  var time2 = int.parse(RegExp(r'\d+').allMatches(data[0]).map((match) => match.group(0)!).reduce((value, element) => value + element));
-  var dist2 = int.parse(RegExp(r'\d+').allMatches(data[1]).map((match) => match.group(0)!).reduce((value, element) => value + element));
-
-  print(calcWins(time2, dist2));
+  print(races.map((race) => calcWins(race[0], race[1])).reduce((value, element) => value * element));
+  print(calcWins(int.parse(time.map((t) => t.toString()).join()), int.parse(dist.map((d) => d.toString()).join())));
 }
