@@ -1,0 +1,9 @@
+name: advent_of_code
+description: Solutions to Advent of Code 2023
+version: 1.0.0
+
+environment:
+  sdk: '^3.0.0'
+
+dependencies:
+  matrices: any
