@@ -7,10 +7,12 @@ import 'package:matrices/matrices.dart';
 int? findHorizontalMirror(Matrix map, int errorAccept) {
   for (int i = 0; i < map.rowCount - 1; i++) {
     int errors = 0;
+    out:
     for (int j = 0; j < min(i + 1, map.rowCount - i - 1); j++) {
       for (int n = 0; n < map[i].length; n++) {
         if (map[i - j][n] != map[i + j + 1][n]) {
-          errors++;
+          if (++errors > errorAccept)
+            break out;
         }
       }
     }
@@ -30,6 +32,8 @@ int mirror(Matrix map, int errorAccept) {
 }
 
 void main() {
+  Stopwatch stopwatch = Stopwatch()..start();
+
   List<List<List<double>>> data = [[]];
   int i = 0;
 
@@ -47,4 +51,8 @@ void main() {
 
   print(maps.map((map) => mirror(map, 0)).reduce((value, element) => value + element));
   print(maps.map((map) => mirror(map, 1)).reduce((value, element) => value + element));
+
+  stopwatch.stop();
+
+  print('Time: ${stopwatch.elapsed}');
 }
