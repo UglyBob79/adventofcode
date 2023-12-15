@@ -2,48 +2,46 @@
 
 import 'dart:io';
 
-
 bool roll(List<List<String>> map, String dir) {
+  int xOffset = 0;
+  int yOffset = 0;
   bool stable = true;
 
-  if (dir == 'N') {
-    for (int y = 1; y < map.length; y++) {
-      for (int x = 0; x < map[y].length; x++) {
-        if (map[y][x] == 'O' && map[y - 1][x] == '.') {
-          map[y - 1][x] = 'O';
-          map[y][x] = '.';
-          stable = false;
-        }
+  switch (dir) {
+    case 'N':
+      yOffset = -1;
+      break;
+
+    case 'S':
+      yOffset = 1;
+      break;
+
+    case 'W':
+      xOffset = -1;
+      break;
+
+    case 'E':
+      xOffset = 1;
+      break;
+  }
+
+  for (int i = 1; i < map.length; i++) {
+    for (int j = 0; j < map[i].length; j++) {
+      int x = 0;
+      int y = 0;
+
+      if (dir == 'N' || dir == 'S') {
+        x = j;
+        y = dir == 'N' ? i : map.length - i - 1;
+      } else {
+        x = dir == 'W' ? i : map.length - i - 1;
+        y = j;
       }
-    }
-  } else if (dir == 'S') {
-    for (int y = map.length - 2; y >= 0; y--) {
-      for (int x = 0; x < map[y].length; x++) {
-        if (map[y][x] == 'O' && map[y + 1][x] == '.') {
-          map[y + 1][x] = 'O';
-          map[y][x] = '.';
-          stable = false;
-        }
-      }
-    }
-  } else if (dir == 'W') {
-    for (int y = 0; y < map.length; y++) {
-      for (int x = 1; x < map[y].length; x++) {
-        if (map[y][x] == 'O' && map[y][x - 1] == '.') {
-          map[y][x - 1] = 'O';
-          map[y][x] = '.';
-          stable = false;
-        }
-      }
-    }
-  } else if (dir == 'E') {
-    for (int y = 0; y < map.length; y++) {
-      for (int x = map[y].length - 2; x >= 0; x--) {
-        if (map[y][x] == 'O' && map[y][x + 1] == '.') {
-          map[y][x + 1] = 'O';
-          map[y][x] = '.';
-          stable = false;
-        }
+
+      if (map[y][x] == 'O' && map[y + yOffset][x + xOffset] == '.') {
+        map[y + yOffset][x + xOffset] = 'O';
+        map[y][x] = '.';
+        stable = false;
       }
     }
   }
@@ -89,7 +87,7 @@ void part2(List<List<String>> map) {
 
     cycles.add(map.map((row) => List<String>.from(row)).toList());
 
-    for (int j = cycles.length - 2; j>= 0; j--) {
+    for (int j = cycles.length - 2; j >= 0; j--) {
       if (compare(cycles[cycles.length - 1], cycles[j])) {
         print(weight(cycles[j + (1000000000 - i) % (i - j)]));
         return;
