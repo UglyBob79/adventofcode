@@ -1,0 +1,91 @@
+#!/usr/bin/env dart
+
+import 'dart:io';
+
+List<int> getABC(var hail) {
+  return [hail[1][1], -hail[1][0], hail[1][1] * hail[0][0] - hail[1][0] * hail[0][1]];
+}
+
+bool inside(double x, double y, int min, int max) {
+  return x >= min && x <= max && y >= min && y <= max;
+}
+
+bool isFuturePoint(double x, double y, var hail, var abc) {
+  return getTime(x, hail) >= 0;
+}
+
+double getTime(double x, var hail) {
+  double t = (x - hail[0][0]) / hail[1][0];
+  return t;
+}
+
+bool isIntersecting(var hail1, var hail2, int min, int max) {
+  print("Hailstone A: ${hail1[0]} @ ${hail1[1]}");
+  print("Hailstone B: ${hail2[0]} @ ${hail2[1]}");
+
+  var abc1 = getABC(hail1);
+  var abc2 = getABC(hail2);
+
+  int determinant = abc1[0] * abc2[1] - abc2[0] * abc1[1];
+
+  if (determinant == 0) {
+    print("Hailstones' paths are parallel; they never intersect.");
+    return false;
+  } else {
+    // Calculate intersection point
+    double x = (abc2[1] * abc1[2] - abc1[1] * abc2[2]) / determinant;
+    double y = (abc1[0] * abc2[2] - abc2[0] * abc1[2]) / determinant;
+
+    //print("(x,y) = ($x,$y), inside: ${inside(x, y, min, max)}");
+
+    if (inside(x, y, min, max)) {
+      if (!isFuturePoint(x, y, hail1, abc1) && !isFuturePoint(x, y, hail2, abc2)) {
+        print("Hailstones' paths crossed in the past for both hailstones.");
+        return false;
+      } else if (!isFuturePoint(x, y, hail1, abc1)) {
+        print("Hailstones' paths crossed in the past for hailstone A.");
+        return false;
+      } else if (!isFuturePoint(x, y, hail2, abc2)) {
+        print("Hailstones' paths crossed in the past for hailstone B.");
+        return false;
+      } else {
+        print("Hailstones' paths will cross inside the test area (at x=$x, y=$y).");
+        return true;
+      }
+    } else {
+      print("Hailstones' paths will cross outside the test area (at x=$x, y=$y).");
+      return false;
+    }
+  }
+}
+
+void part1(List<List<List<int>>> hails, int min, int max) {
+  int count = 0;
+  for (int i = 0; i < hails.length; i++) {
+    for (int j = i + 1; j < hails.length; j++) {
+      List<List<int>> hail1 = hails[i];
+      List<List<int>> hail2 = hails[j];
+
+      if (isIntersecting(hail1, hail2, min, max)) {
+        count++;
+      }
+    }
+  }
+
+  print(count);
+}
+
+void main() {
+  String file = "24.input";
+  List<List<List<int>>> data = File(file)
+      .readAsLinesSync()
+      .map((line) => line.split('@')
+          .map((group) => group.split(',').map((s) => int.parse(s)).toList())
+          .toList())
+      .toList();
+
+  int min = file == "24.example" ? 7 : 200000000000000;
+  int max = file == "24.example" ? 27 : 400000000000000;
+
+  part1(data, min, max);
+}
