@@ -11,9 +11,6 @@ dirs = [
 def in_bounds(map, pos):
     return 0 <= pos[1] < len(map) and 0 <= pos[0] < len(map[0])
 
-def legal(map, pos, curr_height):
-    pass
-
 def move(pos, delta):
     return (pos[0] + delta[0], pos[1] + delta[1])
 
