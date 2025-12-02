@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-def is_invalid(value):
+def is_invalid_a(value):
     s = str(value)
     n = len(s)
 
@@ -24,16 +24,16 @@ def split_str(s, n):
     for i in range(0, len(s), n):
             yield s[i:i + n]
 
-def find_invalids(data, part2=False):
+def find_invalids(data, valid_func):
     for a, b in data:
         for i in range(a, b + 1):
-            if not part2 and is_invalid(i) or part2 and is_invalid_b(i):
+            if valid_func(i):
                 yield i
 
 with open("2.input") as file:
     data = [tuple(map(int, x.split('-'))) for x in file.readline().split(',')]
 
-    print(sum(list(find_invalids(data))))
-    print(sum(list(find_invalids(data, part2=True))))
+    print(sum(list(find_invalids(data, is_invalid_a))))
+    print(sum(list(find_invalids(data, is_invalid_b))))
 
 
