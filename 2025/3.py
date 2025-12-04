@@ -2,15 +2,12 @@
 
 def find_best(bank, n):
     a = 0
-    b = len(bank) - n + 1
     out = 0
     
-    for _ in range(0, n):
-        search = bank[a:b]
-        m = max(search)
+    for b in range(len(bank) - n + 1, len(bank) + 1):
+        i, m = max(enumerate(bank[a:b]), key=lambda x: x[1])
         out = out * 10 + m
-        a = a + search.index(m) + 1
-        b += 1
+        a = a + i + 1
 
     return out
 
